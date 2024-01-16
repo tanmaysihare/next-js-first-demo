@@ -1,6 +1,7 @@
 import {MongoClient} from "mongodb";
 
 async function handler(req,res){
+   
     if(req.method === 'POST'){
         const data = req.body;
         const client = await MongoClient.connect('mongodb+srv://Tanmay-Sihare:sumansihare@cluster0.tko8o8o.mongodb.net/meetups?retryWrites=true&w=majority');
