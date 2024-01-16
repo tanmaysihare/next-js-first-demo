@@ -1,22 +1,7 @@
 import MeetupList from "@/components/meetups/MeetupList";
+import { MongoClient } from "mongodb";
 
 
-const DUMMY_MEETUPS =[
-    {
-        id:'m1',
-        title: 'A First Meetup',
-        image: 'https://www.pakainfo.com/wp-content/uploads/2021/09/image-url-for-testing.jpg',
-        address: 'some address',
-        description: 'This is a first meetup !!',
-    },
-    {
-        id:'m2',
-        title: 'A Second Meetup',
-        image: 'https://www.pakainfo.com/wp-content/uploads/2021/09/image-url-for-testing.jpg',
-        address: 'some second address',
-        description: 'This is a second meetup !!',
-    }
-]
 function HomePage(props) {
 
   return (
@@ -26,9 +11,20 @@ function HomePage(props) {
   )
 }
 export async function getStaticProps(){
+        const client = await MongoClient.connect('mongodb+srv://Tanmay-Sihare:sumansihare@cluster0.tko8o8o.mongodb.net/meetups?retryWrites=true&w=majority');
+        const db = client.db();
+        const meetupsCollection = db.collection('meetups');
+        const meetups = meetupsCollection.find().toArray();
+      
   return {
     props:{
-      meetups: DUMMY_MEETUPS
+      meetups: (await meetups).map(meetup=>({
+        id:meetup._id.toString(),
+        title:meetup.title,
+        image:meetup.image,
+        address:meetup.address,
+        description:meetup.description,
+      }))
     },
     revalidate:1
   };
